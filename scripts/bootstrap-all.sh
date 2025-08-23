@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# bootstrap-all.sh — Cross-platform bootstrap for dotfiles
+# bootstrap-all.sh — Cross-platform bootstrap for dotfiles + Ubuntu apps
 set -euo pipefail
 
 # ANSI colors
@@ -31,20 +31,14 @@ install_deps(){
   log "Installing dependencies for ${os}..."
   case $os in
     fedora)
-      sudo dnf install -y \
-        git emacs cmake clang llvm-devel make gcc-c++ \
-        curl unzip ripgrep fd-find fontconfig
+      sudo dnf install -y git emacs cmake clang llvm-devel make gcc-c++ curl unzip ripgrep fd-find fontconfig stow
       ;;
     debian)
       sudo apt update
-      sudo apt install -y \
-        git emacs cmake build-essential \
-        curl unzip ripgrep fd-find fontconfig
+      sudo apt install -y git emacs cmake build-essential curl unzip ripgrep fd-find fontconfig stow
       ;;
     arch)
-      sudo pacman -Syu --noconfirm \
-        git emacs cmake gcc make clang \
-        curl unzip ripgrep fd fontconfig
+      sudo pacman -Syu --noconfirm git emacs cmake gcc make clang curl unzip ripgrep fd fontconfig stow
       ;;
     macos)
       if ! command -v brew &>/dev/null; then
@@ -52,22 +46,19 @@ install_deps(){
         exit 1
       fi
       brew update
-      brew install git emacs cmake llvm ripgrep fd fontconfig || true
+      brew install git emacs cmake llvm ripgrep fd fontconfig stow || true
       brew tap homebrew/cask-fonts
       ;;
     windows)
-      if ! command -v winget &>/dev/null && ! command -v choco &>/dev/null; then
-        error "Neither winget nor choco found—please install one for Windows package management"
-        exit 1
-      fi
       if command -v winget &>/dev/null; then
         winget install --id Git.Git -e --silent
         winget install --id GNU.Emacs -e --silent
         winget install --id Kitware.CMake -e --silent
         winget install --id Ripgrep.Ripgrep -e --silent
-        # fd and fontconfig may not be available; skip
-      else
+      elif command -v choco &>/dev/null; then
         choco install git emacs cmake ripgrep -y
+      else
+        warn "Please install Git, Emacs, CMake, ripgrep manually on Windows"
       fi
       ;;
     *)
@@ -77,7 +68,7 @@ install_deps(){
   success "Dependencies installed for ${os}"
 }
 
-# Install fonts (calls your existing setup-fonts.sh)
+# Install fonts
 install_fonts(){
   if [ -x "./scripts/setup-fonts.sh" ]; then
     log "Running font installer..."
@@ -95,6 +86,20 @@ deploy_dotfiles(){
   success "Dotfiles deployed"
 }
 
+# Install messaging apps on Ubuntu/Debian
+install_ubuntu_apps(){
+  local os=$1
+  if [ "$os" = "debian" ]; then
+    if [ -x "./scripts/ubuntu-apps-install.sh" ]; then
+      log "Installing messaging apps via ubuntu-apps-install.sh..."
+      ./scripts/ubuntu-apps-install.sh
+      success "Messaging apps installed"
+    else
+      warn "ubuntu-apps-install.sh not found or not executable"
+    fi
+  fi
+}
+
 main(){
   local os=$(detect_os)
   log "Detected OS: ${os}"
@@ -102,8 +107,10 @@ main(){
   install_deps "$os"
   install_fonts
   deploy_dotfiles
+  install_ubuntu_apps "$os"
 
   success "Bootstrap complete! Launch Emacs to finish remaining setup."
 }
 
 main
+
