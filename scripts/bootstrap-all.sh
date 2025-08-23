@@ -70,21 +70,28 @@ install_deps(){
 
 # Install fonts
 install_fonts(){
-  if [ -x "./scripts/setup-fonts.sh" ]; then
+  local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  local font_script="$script_dir/setup-fonts.sh"
+  if [ -x "$font_script" ]; then
     log "Running font installer..."
-    ./scripts/setup-fonts.sh
+    "$font_script"
     success "Fonts installed"
   else
-    warn "Font installer script not found or not executable"
+    warn "Font installer script not found or not executable: $font_script"
   fi
 }
 
 # Deploy dotfiles via Stow
 deploy_dotfiles(){
   log "Deploying dotfiles with Stow..."
+  # Change to parent directory where emacs/ package exists
+  cd "$(dirname "$0")/.."
   stow -R emacs
   success "Dotfiles deployed"
+  mkdir ~/.config/emacs
+  sudo apt install -y cmake libtool pkg-config ninja-build libvterm-dev
 }
+
 
 # Install messaging apps on Ubuntu/Debian
 install_ubuntu_apps(){
