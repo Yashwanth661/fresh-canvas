@@ -397,32 +397,146 @@ one, an error is signaled."
 ;; (define-key minibuffer-local-map (kbd "DEL") 'my-backward-delete-char)
 ;; (define-key minibuffer-local-map (kbd "<backspace>") 'my-backward-delete-char)
 
-(set-face-attribute 'default nil
-  :font "JetBrains Mono"
-  :height 110
-  :weight 'medium)
-(set-face-attribute 'variable-pitch nil
-  :font "Ubuntu"
-  :height 120
-  :weight 'medium)
-(set-face-attribute 'fixed-pitch nil
-  :font "JetBrains Mono"
-  :height 110
-  :weight 'medium)
+;; System dependencies and fonts map
+(defvar system-dependencies
+  '((fedora . ("git" "emacs" "ripgrep" "fd-find" "ubuntu-family-fonts" "jetbrains-mono-fonts"))
+    (debian . ("git" "emacs" "ripgrep" "fd-find" "fonts-ubuntu" "fonts-jetbrains-mono")) 
+    (arch   . ("git" "emacs" "ripgrep" "fd" "ttf-ubuntu-font-family" "ttf-jetbrains-mono"))
+    (macos  . ("git" "emacs" "ripgrep" "fd" "font-ubuntu" "font-jetbrains-mono")))
+  "System dependencies per distribution.")
+
+;; Bootstrap function (runs once)
+(defun bootstrap-system-dependencies ()
+  "Bootstrap system dependencies and fonts."
+  (interactive)
+  (let ((bootstrap-file (expand-file-name "bootstrap-complete" user-emacs-directory)))
+    (unless (file-exists-p bootstrap-file)
+      (message "Running first-time system bootstrap...")
+      
+      ;; Install system packages based on detected distribution
+      (let* ((pm (detect-package-manager))
+             (distro (pcase pm
+                      ("dnf" 'fedora)
+                      ("apt" 'debian) 
+                      ("pacman" 'arch)
+                      ("brew" 'macos)))
+             (packages (cdr (assoc distro system-dependencies))))
+        
+        (when packages
+          (message "Installing packages for %s..." distro)
+          (dolist (pkg packages)
+            (let ((install-cmd
+                   (pcase pm
+                     ("dnf" `("sudo" "dnf" "install" "-y" ,pkg))
+                     ("apt" `("sudo" "apt" "install" "-y" ,pkg))
+                     ("pacman" `("sudo" "pacman" "-S" "--noconfirm" ,pkg))
+                     ("brew" `("brew" "install" ,(if (string-prefix-p "font-" pkg) "--cask" "") ,pkg)))))
+              (when install-cmd
+                (message "Installing %s..." pkg)
+                (apply #'call-process (car install-cmd) nil nil nil (cdr install-cmd))))))
+        
+        ;; Refresh font cache
+        (call-process "fc-cache" nil nil nil "-fv")
+        
+        ;; Create completion marker
+        (with-temp-file bootstrap-file
+          (insert "Bootstrap completed on: " (current-time-string)))
+        
+        (message "System bootstrap completed!")))))
+
+;; Run bootstrap on startup (only once)
+(add-hook 'after-init-hook #'bootstrap-system-dependencies)
+
+;; Font availability checker
+(defun font-available-p (font-name)
+  "Check if FONT-NAME is available on the system."
+  (when (display-graphic-p)
+    (find-font (font-spec :name font-name))))
+
+;; System package manager detection
+(defun detect-package-manager ()
+  "Detect system package manager."
+  (cond
+   ((executable-find "dnf") "dnf")
+   ((executable-find "apt") "apt") 
+   ((executable-find "pacman") "pacman")
+   ((executable-find "brew") "brew")
+   (t nil)))
+
+;; Automatic font installation
+(defun install-font-package (font-name package-name)
+  "Install missing font package automatically."
+  (let ((pm (detect-package-manager)))
+    (when pm
+      (message "Installing font: %s" font-name)
+      (let ((install-cmd
+             (pcase pm
+               ("dnf" `("sudo" "dnf" "install" "-y" ,package-name))
+               ("apt" `("sudo" "apt" "install" "-y" 
+                       ,(pcase package-name
+                          ("ubuntu-family-fonts" "fonts-ubuntu")
+                          ("liberation-fonts" "fonts-liberation") 
+                          ("jetbrains-mono-fonts" "fonts-jetbrains-mono")
+                          (_ package-name))))
+               ("pacman" `("sudo" "pacman" "-S" "--noconfirm"
+                          ,(pcase package-name
+                             ("ubuntu-family-fonts" "ttf-ubuntu-font-family")
+                             ("liberation-fonts" "ttf-liberation")
+                             ("jetbrains-mono-fonts" "ttf-jetbrains-mono")
+                             (_ package-name))))
+               ("brew" `("brew" "install" "--cask"
+                        ,(pcase package-name
+                           ("ubuntu-family-fonts" "font-ubuntu")
+                           ("liberation-fonts" "font-liberation")
+                           ("jetbrains-mono-fonts" "font-jetbrains-mono")
+                           (_ package-name)))))))
+        (when install-cmd
+          (apply #'call-process (car install-cmd) nil nil nil (cdr install-cmd))
+          (call-process "fc-cache" nil nil nil "-fv"))))))
+
+;; Safe font configuration with auto-installation
+(defun safe-set-font (face font-list &rest args)
+  "Safely set font with automatic installation fallback."
+  (when (display-graphic-p)
+    (let ((available-font (seq-find #'font-available-p font-list)))
+      (if available-font
+          (apply #'set-face-attribute face nil :font available-font args)
+        (progn
+          (message "No fonts available from: %s" font-list)
+          ;; Auto-install first missing font
+          (let ((font-packages '(("Ubuntu" . "ubuntu-family-fonts")
+                                ("JetBrains Mono" . "jetbrains-mono-fonts")
+                                ("Liberation Sans" . "liberation-fonts"))))
+            (dolist (font-name font-list)
+              (let ((package-name (cdr (assoc font-name font-packages))))
+                (when package-name
+                  (install-font-package font-name package-name)))))
+          ;; Retry after installation
+          (let ((retry-font (seq-find #'font-available-p font-list)))
+            (when retry-font
+              (apply #'set-face-attribute face nil :font retry-font args))))))))
+
+;; Configure fonts with automatic installation fallback
+(safe-set-font 'default 
+               '("JetBrains Mono" "Liberation Mono" "DejaVu Sans Mono" "monospace")
+               :height 110 :weight 'medium)
+
+(safe-set-font 'variable-pitch 
+               '("Ubuntu" "Liberation Sans" "DejaVu Sans" "sans-serif")
+               :height 120 :weight 'medium)
+
+(safe-set-font 'fixed-pitch 
+               '("JetBrains Mono" "Liberation Mono" "DejaVu Sans Mono" "monospace")
+               :height 110 :weight 'medium)
+
 ;; Makes commented text and keywords italics.
-;; This is working in emacsclient but not emacs.
-;; Your font must have an italic face available.
-(set-face-attribute 'font-lock-comment-face nil
-  :slant 'italic)
-(set-face-attribute 'font-lock-keyword-face nil
-  :slant 'italic)
+(set-face-attribute 'font-lock-comment-face nil :slant 'italic)
+(set-face-attribute 'font-lock-keyword-face nil :slant 'italic)
 
 ;; This sets the default font on all graphical frames created after restarting Emacs.
-;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
-;; are not right unless I also add this method of setting the default font.
 (add-to-list 'default-frame-alist '(font . "JetBrains Mono-11"))
 
-;; Uncomment the following line if line spacing needs adjusting.
+;; Line spacing
 (setq-default line-spacing 0.12)
 
 (global-set-key (kbd "C-=") 'text-scale-increase)
@@ -846,7 +960,7 @@ one, an error is signaled."
 (add-hook 'markdown-mode-hook 'markdown-preview-mode)
 
 (use-package winner
-  :ensure t
+  :elpaca nil	;; do not install from external repo
   :config
   (winner-mode 1))
 
@@ -1041,9 +1155,9 @@ one, an error is signaled."
 (global-auto-revert-mode t)  ;; Automatically show changes if the file has changed
 (global-display-line-numbers-mode 1) ;; Display line numbers
 (global-visual-line-mode t)  ;; Enable truncated lines
-(menu-bar-mode t)           ;; Disable the menu bar 
+(menu-bar-mode -1)           ;; Disable the menu bar 
 (scroll-bar-mode -1)         ;; Disable the scroll bar
-(tool-bar-mode -1)           ;; Disable the tool bar
+(tool-bar-mode t)           ;; Disable the tool bar
 (setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
 (setq use-file-dialog nil) ;; No file dialog
 (setq use-dialog-box nil) ;; No dialog
@@ -1079,6 +1193,12 @@ one, an error is signaled."
 (setq shell-file-name "/bin/zsh"
       vterm-max-scrollback 5000))
 
+(with-eval-after-load 'vterm-toggle
+  (defcustom vterm-toggle-hide-hook nil
+    "Hook run when hiding the vterm buffer."
+    :type '(repeat function)
+    :group 'vterm-toggle))
+
 (use-package vterm-toggle
   :after vterm
   :config
@@ -1100,6 +1220,9 @@ one, an error is signaled."
 
 (use-package multi-vterm
   :ensure t
+  :elpaca (multi-vterm
+           :repo "anler/multi-vterm"
+           :files ("*.el" "README.md"))
   :config
   ;; Set dedicated window height (optional)
   (setq multi-vterm-dedicated-window-height-percent 30)
