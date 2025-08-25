@@ -13,7 +13,7 @@ log "Installing messaging apps on Ubuntu..."
 
 # 1. Telegram Desktop via Flatpak
 {
-  log "Installing Telegram Desktop via Flatpak..."
+  log "Installing Telegram Desktop via Snap..."
   sudo snap install telegram-desktop
   success "Telegram Desktop installed"
 } || warn "Telegram installation failed"
@@ -32,3 +32,18 @@ log "Installing messaging apps on Ubuntu..."
       warn "WhatsApp Flatpak install also failed"
   fi
 } || warn "WhatsApp install encountered an unexpected error"
+
+# 3.Discord and BetterDiscord via RPM Fusion
+{
+    log "Installing Discord via Snap"
+    sudo snap install discord
+    
+    log "Installing betterDiscord CLI from PPA"
+    sudo add-apt-repository ppa:chronobserver/betterdiscordctl
+    sudo apt update
+
+    sudo apt install betterdiscordctl
+    
+    log "Applying betterDiscord to Discord"
+    betterdiscordctl --d-install snap install
+} || warn "Discord and BetterDiscord encountered an unexpected error"
