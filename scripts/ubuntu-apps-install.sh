@@ -37,13 +37,32 @@ log "Installing messaging apps on Ubuntu..."
 {
     log "Installing Discord via Snap"
     sudo snap install discord
-    
-    log "Installing betterDiscord CLI from PPA"
-    sudo add-apt-repository ppa:chronobserver/betterdiscordctl
-    sudo apt update
 
-    sudo apt install betterdiscordctl
-    
+    discord &
+echo "Waiting for Discord modules directory..."
+
+# Wait for modules directory to be created (indicates initialization complete)
+while [ ! -d "$HOME/snap/discord/current/.config/discord" ]; do
+    sleep 2
+    echo "Still waiting..."
+done
+
+echo "Discord config directory found! Waiting 30 more seconds for full setup..."
+sleep 30
+pkill -i discord
+pkill -i firefox
+echo "Discord closed after proper initialization."
+
+    log "Installing BetterDiscord through manual method"
+    # Download the script from GitHub
+    curl -O https://raw.githubusercontent.com/bb010g/betterdiscordctl/master/betterdiscordctl
+
+    # Make it executable
+    chmod +x betterdiscordctl
+
+    # Move it to a system path so it\u2019s available everywhere
+    sudo mv betterdiscordctl /usr/local/bin
+
     log "Applying betterDiscord to Discord"
-    betterdiscordctl --d-install snap install
+    betterdiscordctl -i snap install
 } || warn "Discord and BetterDiscord encountered an unexpected error"
