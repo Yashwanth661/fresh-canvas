@@ -8,6 +8,7 @@
 * TABLE OF CONTENTS :toc:
 - [[#important-programms-to-load-first][IMPORTANT PROGRAMMS TO LOAD FIRST]]
   - [[#elpaca-package-manager][Elpaca Package Manager]]
+- [[#shell-check][Shell-Check]]
 - [[#all-the-icons][ALL THE ICONS]]
 - [[#anzu][ANZU]]
 - [[#backup][BACKUP]]
@@ -148,6 +149,29 @@
 ;;(elpaca nil (message "deferred"))
 #+end_src
 
+* Shell-Check                                               
+#+begin_src emacs-lisp
+;; --------------------------------------------------------------------------------
+;; Ensure Emacs uses the correct shell for compilation and subprocess commands
+;; --------------------------------------------------------------------------------
+(let ((zsh-path (cond
+                 ((file-exists-p "/bin/zsh")     "/bin/zsh")
+                 ((file-exists-p "/usr/bin/zsh") "/usr/bin/zsh")
+                 (t nil))))
+  (cond
+   (zsh-path
+    (setq explicit-shell-file-name zsh-path
+          shell-file-name           zsh-path))
+   ((file-exists-p "/bin/bash")
+    (setq explicit-shell-file-name "/bin/bash"
+          shell-file-name           "/bin/bash"))
+   (t
+    (message "Warning: no zsh or bash found; using default shell"))))
+
+;; Export to subprocess environment
+(setenv "SHELL" shell-file-name)
+(setenv "ESHELL" shell-file-name)
+#+end_src
 
 * ALL THE ICONS
 This is an icon set that can be used with dashboard, dired, ibuffer and other Emacs programs.
@@ -1394,7 +1418,7 @@ Org-tempo is not a separate package but a module within org that can be enabled.
 ;; (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)
 ;;                                                          (blink-cursor-mode -1)
 ;;                                                          (doom-modeline-mode -1)))
-(setenv "PKG_CONFIG" "/opt/homebrew/bin/pkg-config")
+;;(setenv "PKG_CONFIG" "/opt/homebrew/bin/pkg-config")
 (use-package pdf-tools
   :ensure t
   :defer t
@@ -1548,7 +1572,7 @@ Let's make GNU Emacs look a little better.
 (global-visual-line-mode t)  ;; Enable truncated lines
 (menu-bar-mode -1)           ;; Disable the menu bar 
 (scroll-bar-mode -1)         ;; Disable the scroll bar
-(tool-bar-mode t)           ;; Disable the tool bar
+(tool-bar-mode -1)           ;; Disable the tool bar
 (setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
 (setq use-file-dialog nil) ;; No file dialog
 (setq use-dialog-box nil) ;; No dialog

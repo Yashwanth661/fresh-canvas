@@ -60,6 +60,27 @@
 ;; Don't install anything. Defer execution of BODY
 ;;(elpaca nil (message "deferred"))
 
+;; --------------------------------------------------------------------------------
+;; Ensure Emacs uses the correct shell for compilation and subprocess commands
+;; --------------------------------------------------------------------------------
+(let ((zsh-path (cond
+                 ((file-exists-p "/bin/zsh")     "/bin/zsh")
+                 ((file-exists-p "/usr/bin/zsh") "/usr/bin/zsh")
+                 (t nil))))
+  (cond
+   (zsh-path
+    (setq explicit-shell-file-name zsh-path
+          shell-file-name           zsh-path))
+   ((file-exists-p "/bin/bash")
+    (setq explicit-shell-file-name "/bin/bash"
+          shell-file-name           "/bin/bash"))
+   (t
+    (message "Warning: no zsh or bash found; using default shell"))))
+
+;; Export to subprocess environment
+(setenv "SHELL" shell-file-name)
+(setenv "ESHELL" shell-file-name)
+
 (use-package all-the-icons
   :ensure t
   :if (display-graphic-p))
@@ -1040,7 +1061,7 @@ one, an error is signaled."
 ;; (add-hook 'pdf-view-mode-hook #'(lambda () (interactive) (display-line-numbers-mode -1)
 ;;                                                          (blink-cursor-mode -1)
 ;;                                                          (doom-modeline-mode -1)))
-(setenv "PKG_CONFIG" "/opt/homebrew/bin/pkg-config")
+;;(setenv "PKG_CONFIG" "/opt/homebrew/bin/pkg-config")
 (use-package pdf-tools
   :ensure t
   :defer t
@@ -1157,7 +1178,7 @@ one, an error is signaled."
 (global-visual-line-mode t)  ;; Enable truncated lines
 (menu-bar-mode -1)           ;; Disable the menu bar 
 (scroll-bar-mode -1)         ;; Disable the scroll bar
-(tool-bar-mode t)           ;; Disable the tool bar
+(tool-bar-mode -1)           ;; Disable the tool bar
 (setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
 (setq use-file-dialog nil) ;; No file dialog
 (setq use-dialog-box nil) ;; No dialog
