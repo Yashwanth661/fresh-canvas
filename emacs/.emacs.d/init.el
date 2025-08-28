@@ -18,14 +18,28 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes '(timu-rouge))
  '(custom-safe-themes
-   '("02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644" "6945dadc749ac5cbd47012cad836f92aea9ebec9f504d32fe89a956260773ca4" "944d52450c57b7cbba08f9b3d08095eb7a5541b0ecfb3a0a9ecd4a18f3c28948" "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "1f669e8abe4dc2855268c9a607b5e350e2811b3c5afd09af5939ff0c01a89c5a" default))
+   '("bd1247cae7a044fafe88819a91168deb61538c0376a07a108a897ebc256cf0fa"
+     "02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644"
+     "6945dadc749ac5cbd47012cad836f92aea9ebec9f504d32fe89a956260773ca4"
+     "944d52450c57b7cbba08f9b3d08095eb7a5541b0ecfb3a0a9ecd4a18f3c28948"
+     "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561"
+     "1f669e8abe4dc2855268c9a607b5e350e2811b3c5afd09af5939ff0c01a89c5a"
+     default))
  '(elfeed-feeds
    '("https://www.reddit.com/r/emacs.rss"
      ("https://semiaccurate.com/feed")
      ("http://feeds.bbci.co.uk/news/rss.xml")))
  '(package-selected-packages
-   '(elfeed-curate elfeed-webkit emms-player-simple-mpv emms elfeed-org marginalia elfeed-goodies elfeed-dashboard elfeed beacon evil-anzu centered-window indent-bars vundo vterm magit-section taxy-magit-section transient-cycles magit python-mode lua-mode lsp-ui general flycheck doom-themes doom-modeline dashboard all-the-icons-ivy-rich all-the-icons-dired)))
+   '(elfeed-curate elfeed-webkit emms-player-simple-mpv emms elfeed-org
+		   marginalia elfeed-goodies elfeed-dashboard elfeed
+		   beacon evil-anzu centered-window indent-bars vundo
+		   vterm magit-section taxy-magit-section
+		   transient-cycles magit python-mode lua-mode lsp-ui
+		   general flycheck doom-themes doom-modeline
+		   dashboard all-the-icons-ivy-rich
+		   all-the-icons-dired)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

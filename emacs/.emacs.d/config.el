@@ -60,26 +60,26 @@
 ;; Don't install anything. Defer execution of BODY
 ;;(elpaca nil (message "deferred"))
 
-;; --------------------------------------------------------------------------------
-;; Ensure Emacs uses the correct shell for compilation and subprocess commands
-;; --------------------------------------------------------------------------------
-(let ((zsh-path (cond
-                 ((file-exists-p "/bin/zsh")     "/bin/zsh")
-                 ((file-exists-p "/usr/bin/zsh") "/usr/bin/zsh")
-                 (t nil))))
-  (cond
-   (zsh-path
-    (setq explicit-shell-file-name zsh-path
-          shell-file-name           zsh-path))
-   ((file-exists-p "/bin/bash")
-    (setq explicit-shell-file-name "/bin/bash"
-          shell-file-name           "/bin/bash"))
-   (t
-    (message "Warning: no zsh or bash found; using default shell"))))
+;; Modern shell configuration using use-package and exec-path-from-shell
+(use-package exec-path-from-shell
+  :ensure t
+  :if (memq window-system '(mac ns x))
+  :init
+  ;; Add any additional environment variables you need
+  (setq exec-path-from-shell-variables 
+        '("PATH" "MANPATH" "SHELL" "GOPATH" "PYTHONPATH"))
+  :config
+  (exec-path-from-shell-initialize))
 
-;; Export to subprocess environment
-(setenv "SHELL" shell-file-name)
-(setenv "ESHELL" shell-file-name)
+;; Basic shell detection and configuration
+(let ((detected-shell (cond
+                       ((file-exists-p "/bin/zsh")     "/bin/zsh")
+                       ((file-exists-p "/usr/bin/zsh") "/usr/bin/zsh") 
+                       ((file-exists-p "/bin/bash")    "/bin/bash")
+                       (t "/bin/sh"))))
+  (setq shell-file-name detected-shell
+        explicit-shell-file-name detected-shell)
+  (message "Shell configured: %s" detected-shell))
 
 (use-package all-the-icons
   :ensure t
