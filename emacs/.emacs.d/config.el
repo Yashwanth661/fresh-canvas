@@ -60,27 +60,6 @@
 ;; Don't install anything. Defer execution of BODY
 ;;(elpaca nil (message "deferred"))
 
-;; Modern shell configuration using use-package and exec-path-from-shell
-(use-package exec-path-from-shell
-  :ensure t
-  :if (memq window-system '(mac ns x))
-  :init
-  ;; Add any additional environment variables you need
-  (setq exec-path-from-shell-variables 
-        '("PATH" "MANPATH" "SHELL" "GOPATH" "PYTHONPATH"))
-  :config
-  (exec-path-from-shell-initialize))
-
-;; Basic shell detection and configuration
-(let ((detected-shell (cond
-                       ((file-exists-p "/bin/zsh")     "/bin/zsh")
-                       ((file-exists-p "/usr/bin/zsh") "/usr/bin/zsh") 
-                       ((file-exists-p "/bin/bash")    "/bin/bash")
-                       (t "/bin/sh"))))
-  (setq shell-file-name detected-shell
-        explicit-shell-file-name detected-shell)
-  (message "Shell configured: %s" detected-shell))
-
 (use-package all-the-icons
   :ensure t
   :if (display-graphic-p))
@@ -223,11 +202,13 @@ one, an error is signaled."
   (setq initial-buffer-choice 'dashboard-open)
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
-  (setq dashboard-banner-logo-title "We work in the Dark, to serve light")
+  (setq dashboard-banner-logo-title "HAVE FUN!!!!")
   ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
   (setq dashboard-startup-banner "~/.emacs.d/images/emacs-dash.png")  ;; use custom image as banner
-  (setq dashboard-center-content nil) ;; set to 't' for centered content
-  (setq dashboard-items '((recents . 5)
+  (setq org-agenda-files '("~/.emacs.d/org/inbox.org"))
+  (setq dashboard-center-content t) ;; set to 't' for centered content
+  (setq dashboard-vertically-center-content t)
+  (setq dashboard-items '((recents . 5 )
                           (agenda . 5 )
                           (bookmarks . 3)
                           (projects . 3)
@@ -856,27 +837,33 @@ one, an error is signaled."
   (ivy-set-display-transformer 'ivy-switch-buffer
                                'ivy-rich-switch-buffer-transformer))
 
+(use-package lsp-mode
+  :ensure t
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :commands (lsp lsp-deferred)
+  :config
+  (setq lsp-prefer-flymake nil
+        lsp-enable-snippet t
+        lsp-auto-guess-root t))
+
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode
+  :config
+  (setq lsp-ui-sideline-ignore-duplicate t
+        lsp-ui-doc-enable t
+        lsp-ui-peek-enable t))
+
 (use-package cc-mode
   :elpaca nil
   :config
-  (add-hook 'c-mode-hook #'lsp)
-  (add-hook 'c++-mode-hook #'lsp))
+  (add-hook 'c-mode-hook #'lsp-deferred)
+  (add-hook 'c++-mode-hook #'lsp-deferred))
 
 (use-package python-mode
   :ensure t
   :hook (python-mode . lsp-deferred))
-
-(defun compile-and-run-arm-assembly ()
-  (interactive)
-  (save-buffer)
-  (let* ((file (file-name-nondirectory buffer-file-name))
-         (base (file-name-sans-extension file))
-         (compile-command (format "as -o %s.o %s && ld -macosx_version_min 11.0.0 -o %s %s.o -lSystem -syslibroot $(xcrun -sdk macosx --show-sdk-path) -e _start -arch arm64 && ./%s"
-                                  base file base base base)))
-    (when (file-exists-p base)
-      (delete-file base))
-    (compile compile-command)
-    (switch-to-buffer-other-window "*compilation*")))
 
 (defun compile-and-run-c ()
   (interactive)
@@ -900,68 +887,63 @@ one, an error is signaled."
     (compile (format "bash %s" file))
     (switch-to-buffer-other-window "*compilation*")))
 
+(defun compile-and-run-arm-assembly ()
+  (interactive)
+  (save-buffer)
+  (let* ((file (file-name-nondirectory buffer-file-name))
+         (base (file-name-sans-extension file))
+         ;; Linux ARM64 assembly compilation
+         (compile-command (format "as --64 -o %s.o %s && ld -o %s %s.o && ./%s"
+                                  base file base base base)))
+    (when (file-exists-p base)
+      (delete-file base))
+    (compile compile-command)
+    (switch-to-buffer-other-window "*compilation*")))
+
 (defun compile-and-run-verilog ()
   (interactive)
   (save-buffer)
   (let* ((file (file-name-nondirectory buffer-file-name))
          (base (file-name-sans-extension file))
-         (module-file (if (string-match-p "_tb\\.v$" file)
+         (module-file (if (string-match-p "_tb\.v$" file)
                           (concat (file-name-sans-extension
                                    (replace-regexp-in-string "_tb" "" file))
                                   ".v")
                         file))
-         (tb-file (if (string-match-p "_tb\\.v$" file)
+         (tb-file (if (string-match-p "_tb\.v$" file)
                       file
                     (concat base "_tb.v")))
-         (vcd-file (concat base ".vcd"))
-         (compile-command (format "iverilog -o %s %s %s && vvp %s"
-                                  base
-                                  module-file
-                                  tb-file
-                                  base)))
+         (compile-command (format "iverilog -o %s %s %s && vvp %s -fst"
+                                  base module-file tb-file base)))
     (compile compile-command)
     (switch-to-buffer-other-window "*compilation*")
     (run-with-timer
-     5 nil
+     3 nil
      (lambda ()
-       (when (file-exists-p vcd-file)
-         (start-process "gtkwave" nil "gtkwave" vcd-file))))))
-
-(add-hook 'verilog-mode-hook
-          (lambda () (local-set-key [f5] 'compile-and-run-verilog)))
-
-(add-to-list 'auto-mode-alist '("\\.v\\'" . verilog-mode))
-(add-to-list 'auto-mode-alist '("\\.sv\\'" . verilog-mode))
+       (let ((fst-file (concat base ".fst"))
+             (vcd-file (concat base ".vcd")))
+         (when (or (file-exists-p fst-file) (file-exists-p vcd-file))
+           (start-process "gtkwave" nil "gtkwave" 
+                         (if (file-exists-p fst-file) fst-file vcd-file))))))))
 
 ;; F5 key bindings for different modes
 (add-hook 'c-mode-hook
           (lambda () (local-set-key [f5] 'compile-and-run-c)))
-
 (add-hook 'python-mode-hook
           (lambda () (local-set-key [f5] 'run-python-script)))
-
 (add-hook 'sh-mode-hook
           (lambda () (local-set-key [f5] 'run-shell-script)))
-
 (add-hook 'verilog-mode-hook
           (lambda () (local-set-key [f5] 'compile-and-run-verilog)))
-
 (add-hook 'asm-mode-hook
           (lambda () (local-set-key [f5] 'compile-and-run-arm-assembly)))
 
-;; Associate file extensions with modes
-(add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
-(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
-(add-to-list 'auto-mode-alist '("\\.sh\\'" . sh-mode))
-(add-to-list 'auto-mode-alist '("\\.v\\'" . verilog-mode))
-(add-to-list 'auto-mode-alist '("\\.sv\\'" . verilog-mode))
-(add-to-list 'auto-mode-alist '("\\.asm\\'" . asm-mode))
-
-(use-package lsp-mode
-  :ensure t
-  :commands (lsp lsp-deferred)
-  :config
-  (setq lsp-prefer-flymake nil)) ;; Use flycheck instead of flymake if available.
+(add-to-list 'auto-mode-alist '("\.c\'" . c-mode))
+(add-to-list 'auto-mode-alist '("\.py\'" . python-mode))
+(add-to-list 'auto-mode-alist '("\.sh\'" . sh-mode))
+(add-to-list 'auto-mode-alist '("\.v\'" . verilog-mode))
+(add-to-list 'auto-mode-alist '("\.sv\'" . verilog-mode))
+(add-to-list 'auto-mode-alist '("\.asm\'" . asm-mode))
 
 (use-package lsp-ui
   :ensure t
@@ -1084,7 +1066,7 @@ one, an error is signaled."
     "PDF Tools midnight mode colors for light theme.")
 
   ;; Track current theme
-  (defvar my/pdf-current-theme 'dark
+  (defvar my/pdf-current-theme 'light
     "Current PDF theme: 'dark or 'light.")
 
   ;; Toggle function
@@ -1211,7 +1193,7 @@ one, an error is signaled."
 
 (use-package vterm
 :config
-(setq shell-file-name "/bin/zsh"
+(setq shell-file-name "/usr/bin/bash"
       vterm-max-scrollback 5000))
 
 (with-eval-after-load 'vterm-toggle
@@ -1286,7 +1268,7 @@ one, an error is signaled."
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
   ;; Load the doom-dracula theme
-  (load-theme 'doom-dracula t)
+  (load-theme 'timu-rouge t)
 
   ;; enable theme for neo-tree as well
   (doom-themes-neotree-config)
@@ -1295,9 +1277,9 @@ one, an error is signaled."
   (setq custom-safe-themes t))
 
 ;; Ensure the selected theme persists across sessions
-(customize-set-variable 'custom-enabled-themes '(doom-dracula))
+(customize-set-variable 'custom-enabled-themes '(timu-rouge))
 
-(add-to-list 'default-frame-alist '(alpha-background . 100)) ; For all new frames henceforth
+(add-to-list 'default-frame-alist '(alpha-background . 85)) ; For all new frames henceforth
 
 (use-package verilog-mode
   :ensure t
