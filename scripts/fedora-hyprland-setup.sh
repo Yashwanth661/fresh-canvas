@@ -58,6 +58,20 @@ update_system() {
     log_success "System updated successfully"
 }
 
+# Enable COPR repository for Hyprland ecosystem
+enable_hyprland_copr() {
+    log_header "Enabling Hyprland COPR repository..."
+    
+    # Check if the repository is already enabled
+    if dnf repolist | grep -q "copr:copr.fedorainfracloud.org:solopasha:hyprland"; then
+        log_info "Hyprland COPR repository already enabled"
+    else
+        log_info "Enabling solopasha/hyprland COPR repository..."
+        sudo dnf copr enable -y solopasha/hyprland
+        log_success "Hyprland COPR repository enabled"
+    fi
+}
+
 # Setup btrfs snapshots with snapper
 setup_btrfs_snapshots() {
     log_header "Setting up Btrfs snapshots and quotas..."
@@ -311,6 +325,7 @@ main() {
     
     # Main installation steps
     update_system
+    enable_hyprland_copr
     setup_btrfs_snapshots
     install_nvidia_drivers
     install_hyprland_applications
