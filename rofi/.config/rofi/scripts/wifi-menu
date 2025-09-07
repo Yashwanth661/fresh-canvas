@@ -1,0 +1,29 @@
+#!/bin/bash
+# Simple wifi menu using nmcli and rofi
+
+# Get available networks
+NETWORKS=$(nmcli -t -f SSID,SECURITY,SIGNAL dev wifi list | head -20)
+
+if [[ -z "$NETWORKS" ]]; then
+    notify-send "WiFi" "No networks found"
+    exit 1
+fi
+
+# Format for rofi display
+FORMATTED=$(echo "$NETWORKS" | awk -F':' '{
+    ssid = $1
+    security = ($2 == "") ? "Open" : $2
+    signal = $3
+    printf "%-25s %s (%s%%)\n", ssid, security, signal
+}')
+
+# Show rofi menu
+SELECTED=$(echo "$FORMATTED" | rofi -dmenu -p "WiFi Networks" -theme Arc-Dark)
+
+if [[ -n "$SELECTED" ]]; then
+    # Extract SSID from selection
+    SSID=$(echo "$SELECTED" | awk '{print $1}')
+    
+    # Connect to network
+    nmcli dev wifi connect "$SSID" && notify-send "WiFi" "Connected to $SSID" || notify-send "WiFi" "Failed to connect"
+fi
