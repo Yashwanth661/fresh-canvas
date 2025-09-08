@@ -243,6 +243,7 @@ setup_dotfiles() {
     
     # Use stow to link emacs configuration
     log_info "Deploying Emacs configuration with stow..."
+    rm -rf ~/.emacs.d
     stow -R emacs
     
     # Create .config directory if it doesn't exist
