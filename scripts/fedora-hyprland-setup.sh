@@ -251,7 +251,7 @@ setup_dotfiles() {
     
     # Note: Add more stow commands here as you add more configurations to your repo
     # Example: stow -R hyprland (when you add hyprland config to your repo)
-    stow -R swaync wlogout hypr rofi waybar
+    stow -R swaync wlogout hypr rofi waybar colors
     log_success "Dotfiles deployed successfully"
 }
 
