@@ -180,7 +180,7 @@ install_dependencies() {
         nm-connection-editor
         network-manager-applet
         libappindicator-gtk3
-        polkit-gnome
+        hyprpolkitagent
         tumbler
         thunar-volman
         qt5-qtwayland
@@ -250,7 +250,7 @@ setup_dotfiles() {
     
     # Note: Add more stow commands here as you add more configurations to your repo
     # Example: stow -R hyprland (when you add hyprland config to your repo)
-    
+    stow -R swaync wlogout hypr rofi waybar
     log_success "Dotfiles deployed successfully"
 }
 
