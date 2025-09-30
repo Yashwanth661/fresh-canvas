@@ -22,7 +22,10 @@ main() {
             sudo apt update && sudo apt install -y fonts-ubuntu fonts-jetbrains-mono fonts-liberation
             ;;
         "pacman")
-            sudo pacman -S --noconfirm ttf-ubuntu-font-family ttf-jetbrains-mono ttf-liberation
+            sudo pacman -S --noconfirm ttf-ubuntu-font-family ttf-jetbrains-mono ttf-liberation hyprland hyprpaper hyprlock blueman stow waybar rofi-wayland swaync wlogout xdg-desktop-portal-hyprland qt5-wayland qt6-wayland
+	    yay -S proton-vpn-gtk-app
+	    git clone https://github.com/Yashwanth661/fresh-canvas.git ~/dotfiles && cd ~/dotfiles
+	    stow emacs colors hypr rofi swaync waybar wlogout
             ;;
         "brew")
             brew tap homebrew/cask-fonts
@@ -35,4 +38,3 @@ main() {
 }
 
 main "$@"
-
