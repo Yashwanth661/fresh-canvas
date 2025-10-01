@@ -23,6 +23,17 @@ install_dotfiles() {
     stow emacs colors hypr rofi swaync waybar wlogout
 }
 
+setup_waydroid() {
+    sudo waydroid init -s GAPPS
+    echo 'none /dev/binderfs binder nofail 0 0' | sudo tee -a /etc/fstab
+    sudo mkdir -p /dev/binderfs
+    sudo mount -t binder none /dev/binderfs
+    sudo systemctl enable --now waydroid-container
+    sudo pacman -S waydroid-script-git
+    echo "Please do run sudo waydroid-extras, Select Android 13 -> libhoudini, libndk, install these two."
+    echo "Make the device trusted by fetch the android ID of waydroid and get it registered. In order to be able to install apps from PlayStore."
+}
+
 main() {
     local pm=$(detect_pm)
     
@@ -54,17 +65,20 @@ main() {
                 qt6-wayland \
 		hyprshot \
 		brightnessctl \
-		pavucontrol
+		pavucontrol \
+		waydroid \
+		waydroid-helper
             
             echo "Installing AUR packages..."
             if command -v yay &> /dev/null; then
-                yay -S --noconfirm proton-vpn-gtk-app
+                yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland
             else
-                echo "Warning: yay not found, skipping ProtonVPN installation"
-                echo "Install yay manually and run: yay -S proton-vpn-gtk-app"
+                echo "Warning: yay not found, skipping ProtonVPN, pasystray-wayland installation"
+                echo "Install yay manually and run: yay -S proton-vpn-gtk-app pasystray-wayland"
             fi
             
             install_dotfiles
+	    setup_waydroid
             ;;
         "brew")
             brew tap homebrew/cask-fonts
