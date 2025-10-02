@@ -70,7 +70,8 @@ main() {
 		waydroid-helper \
 		bitwarden \
 		emacs \
-		librewolf
+		librewolf \
+		cmake
             
             echo "Installing AUR packages..."
             yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland
