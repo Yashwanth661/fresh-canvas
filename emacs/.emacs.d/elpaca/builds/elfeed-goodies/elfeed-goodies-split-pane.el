@@ -1,0 +1,1 @@
+/home/yashwanth/.emacs.d/elpaca/repos/elfeed-goodies/elfeed-goodies-split-pane.el

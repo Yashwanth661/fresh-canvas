@@ -1,0 +1,1 @@
+/home/yashwanth/.emacs.d/elpaca/repos/themes/themes/doom-homage-black-theme.el

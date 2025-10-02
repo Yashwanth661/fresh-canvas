@@ -1,0 +1,1 @@
+/home/yashwanth/.emacs.d/elpaca/repos/lsp-mode/clients/lsp-verilog.el

@@ -1,0 +1,1 @@
+/home/yashwanth/.emacs.d/elpaca/repos/markdown-preview-mode/markdown-preview-mode.el

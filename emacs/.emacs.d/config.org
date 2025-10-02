@@ -1640,7 +1640,7 @@ Multi-vterm allows you to create and manage multiple vterm buffers, each with it
 (use-package multi-vterm
   :ensure t
   :elpaca (multi-vterm
-           :repo "anler/multi-vterm"
+           :repo "suonlight/multi-vterm"
            :files ("*.el" "README.md"))
   :config
   ;; Set dedicated window height (optional)

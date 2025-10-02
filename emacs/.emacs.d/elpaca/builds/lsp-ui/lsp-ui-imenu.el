@@ -1,0 +1,1 @@
+/home/yashwanth/.emacs.d/elpaca/repos/lsp-ui/lsp-ui-imenu.el
