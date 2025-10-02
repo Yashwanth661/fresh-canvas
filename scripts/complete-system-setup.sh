@@ -67,15 +67,13 @@ main() {
 		brightnessctl \
 		pavucontrol \
 		waydroid \
-		waydroid-helper
+		waydroid-helper \
+		bitwarden \
+		emacs \
+		librewolf
             
             echo "Installing AUR packages..."
-            if command -v yay &> /dev/null; then
-                yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland
-            else
-                echo "Warning: yay not found, skipping ProtonVPN, pasystray-wayland installation"
-                echo "Install yay manually and run: yay -S proton-vpn-gtk-app pasystray-wayland"
-            fi
+            yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland
             
             install_dotfiles
 	    setup_waydroid
