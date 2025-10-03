@@ -23,6 +23,13 @@ install_dotfiles() {
     stow emacs colors hypr rofi swaync waybar wlogout
 }
 
+install_telegram_downloader() {
+    wget https://github.com/iyear/tdl/releases/latest/download/tdl_Linux_64bit.tar.gz
+    tar -xzf tdl_Linux_64bit.tar.gz
+    sudo mv tdl /usr/local/bin/
+    rm -rf tdl_Linux_64bit.tar.gz
+}
+
 setup_waydroid() {
     sudo waydroid init -s GAPPS
     echo 'none /dev/binderfs binder nofail 0 0' | sudo tee -a /etc/fstab
@@ -74,10 +81,11 @@ main() {
 		cmake
             
             echo "Installing AUR packages..."
-            yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland
+            yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland plex-desktop plexamp-appimage
             
             install_dotfiles
 	    setup_waydroid
+	    install_telegram_downloader
             ;;
         "brew")
             brew tap homebrew/cask-fonts
@@ -92,6 +100,7 @@ main() {
     echo "Refreshing font cache..."
     fc-cache -fv
     echo "Setup completed successfully!"
+    echo "Make sure that you register the waydroid device as a a trsuted device and then login to tdl (telegram downloader) and have a BLAST!!!!!!!!"
 }
 
 main "$@"
