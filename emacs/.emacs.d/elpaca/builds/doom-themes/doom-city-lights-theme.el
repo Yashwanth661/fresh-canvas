@@ -1,1 +1,0 @@
-/home/yashwanth/.emacs.d/elpaca/repos/themes/themes/doom-city-lights-theme.el

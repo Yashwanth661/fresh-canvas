@@ -1,1 +1,0 @@
-/home/yashwanth/.emacs.d/elpaca/repos/centered-window-mode/centered-window.el

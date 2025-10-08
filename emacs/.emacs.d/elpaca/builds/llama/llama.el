@@ -1,1 +1,0 @@
-/home/yashwanth/.emacs.d/elpaca/repos/llama/llama.el
