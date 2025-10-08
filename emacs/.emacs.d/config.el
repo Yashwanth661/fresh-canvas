@@ -1224,7 +1224,7 @@ one, an error is signaled."
 (use-package multi-vterm
   :ensure t
   :elpaca (multi-vterm
-           :repo "anler/multi-vterm"
+           :repo "suonlight/multi-vterm"
            :files ("*.el" "README.md"))
   :config
   ;; Set dedicated window height (optional)
@@ -1267,14 +1267,19 @@ one, an error is signaled."
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-  ;; Load the doom-dracula theme
-  (load-theme 'timu-rouge t)
+   ;; Automatically accept all themes as safe
+  (setq custom-safe-themes t))
 
   ;; enable theme for neo-tree as well
   (doom-themes-neotree-config)
 
-  ;; Automatically accept all themes as safe
-  (setq custom-safe-themes t))
+ ;; Install timu-rouge-theme package separately to ensure availability
+(use-package timu-rouge-theme
+  :ensure t
+  :after doom-themes
+  :config
+  ;; Load timu-rouge theme with no confirmation required
+  (load-theme 'timu-rouge t))
 
 ;; Ensure the selected theme persists across sessions
 (customize-set-variable 'custom-enabled-themes '(timu-rouge))

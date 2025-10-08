@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/yashwanth/.emacs.d/elpaca/builds/vterm/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

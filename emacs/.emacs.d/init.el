@@ -20,7 +20,8 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(timu-rouge))
  '(custom-safe-themes
-   '("bd1247cae7a044fafe88819a91168deb61538c0376a07a108a897ebc256cf0fa"
+   '("130bda3c4c328c13e6f91009e429ebd7522c6a0d49af6fc32b9fa1bc9b8cf753"
+     "bd1247cae7a044fafe88819a91168deb61538c0376a07a108a897ebc256cf0fa"
      "02f57ef0a20b7f61adce51445b68b2a7e832648ce2e7efb19d217b6454c1b644"
      "6945dadc749ac5cbd47012cad836f92aea9ebec9f504d32fe89a956260773ca4"
      "944d52450c57b7cbba08f9b3d08095eb7a5541b0ecfb3a0a9ecd4a18f3c28948"
@@ -31,15 +32,17 @@
    '("https://www.reddit.com/r/emacs.rss"
      ("https://semiaccurate.com/feed")
      ("http://feeds.bbci.co.uk/news/rss.xml")))
+ '(org-agenda-files nil)
  '(package-selected-packages
-   '(elfeed-curate elfeed-webkit emms-player-simple-mpv emms elfeed-org
-		   marginalia elfeed-goodies elfeed-dashboard elfeed
-		   beacon evil-anzu centered-window indent-bars vundo
-		   vterm magit-section taxy-magit-section
-		   transient-cycles magit python-mode lua-mode lsp-ui
-		   general flycheck doom-themes doom-modeline
-		   dashboard all-the-icons-ivy-rich
-		   all-the-icons-dired)))
+   '(all-the-icons-dired all-the-icons-ivy-rich beacon centered-window
+			 dashboard doom-modeline doom-themes elfeed
+			 elfeed-curate elfeed-dashboard elfeed-goodies
+			 elfeed-org elfeed-webkit emms
+			 emms-player-simple-mpv evil-anzu flycheck
+			 general indent-bars lsp-ui lua-mode magit
+			 magit-section marginalia python-mode
+			 taxy-magit-section timu-rouge-theme
+			 transient-cycles vterm vundo xah-fly-keys)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
