@@ -1,0 +1,15 @@
+# ===== EMACS SPECIFIC =====
+# Runtime and cache files for Emacs
+emacs/.emacs.d/auto-save-list/
+emacs/.emacs.d/eln-cache/
+emacs/.emacs.d/elpa/
+emacs/.emacs.d/elpaca/
+emacs/.emacs.d/transient/
+emacs/.emacs.d/Trash/
+emacs/.emacs.d/emms/
+emacs/.emacs.d/recentf
+emacs/.emacs.d/projectile-bookmarks.eld
+emacs/.emacs.d/tramp
+emacs/.emacs.d/network-security.data
+emacs/.emacs.d/.emacs.desktop*
+emacs/.emacs.d/.org-id-locations
