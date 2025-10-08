@@ -30,6 +30,17 @@ install_telegram_downloader() {
     rm -rf tdl_Linux_64bit.tar.gz
 }
 
+install_megacmd() {
+    wget https://mega.nz/linux/repo/Arch_Extra/x86_64/megacmd-x86_64.pkg.tar.zst && sudo pacman -U "$PWD/megacmd-x86_64.pkg.tar.zst"
+}
+
+create_dirs() {
+	mkdir ~/Downloads/Upload_Section/{CompletedTorrentDownloads,English_Movies,Hindi_Movies,Tamil_Movies,Malayalam_Movies,Japanese_Movies,World_Cinema,Animated_Movies,Anime,Anime_Movies,Cartoons,TV_Shows,World_TV,Manga,YouTube,Documentaries}
+	sudo systemctl enable --now tailscaled
+	mkdir ~/.local/bin
+	mkdir ~/.local/bin/rclone-logs
+}
+
 setup_waydroid() {
     sudo waydroid init -s GAPPS
     echo 'none /dev/binderfs binder nofail 0 0' | sudo tee -a /etc/fstab
@@ -78,14 +89,23 @@ main() {
 		bitwarden \
 		emacs \
 		librewolf \
-		cmake
+		cmake \
+		obs-studio \
+		ffmpeg \
+		rclone \
+		tailscale \
+		claude-code \
+		ripgrep \
+		git
             
             echo "Installing AUR packages..."
-            yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland plex-desktop plexamp-appimage
+            yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland plex-desktop plexamp-appimage yt-dlp
             
             install_dotfiles
 	    setup_waydroid
-	    install_telegram_downloader
+            install_telegram_downloader
+	    install_megacmd
+	    create_dirs
             ;;
         "brew")
             brew tap homebrew/cask-fonts
