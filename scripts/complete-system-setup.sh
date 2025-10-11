@@ -34,6 +34,14 @@ install_megacmd() {
     wget https://mega.nz/linux/repo/Arch_Extra/x86_64/megacmd-x86_64.pkg.tar.zst && sudo pacman -U "$PWD/megacmd-x86_64.pkg.tar.zst"
 }
 
+install_xdm() {
+    # Download latest XDM
+    wget https://github.com/subhra74/xdm/releases/download/7.2.11/xdm-setup-7.2.11.tar.xz
+    tar -xvf xdm-setup-7.2.11.tar.xz
+    cd xdm*
+    sudo ./install.sh
+}
+
 create_dirs() {
 	mkdir ~/Downloads/Upload_Section/{CompletedTorrentDownloads,English_Movies,Hindi_Movies,Tamil_Movies,Malayalam_Movies,Japanese_Movies,World_Cinema,Animated_Movies,Anime,Anime_Movies,Cartoons,TV_Shows,World_TV,Manga,YouTube,Documentaries}
 	sudo systemctl enable --now tailscaled
