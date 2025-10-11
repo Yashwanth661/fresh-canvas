@@ -1271,7 +1271,7 @@ one, an error is signaled."
   (setq custom-safe-themes t))
 
   ;; enable theme for neo-tree as well
-  (doom-themes-neotree-config)
+  ;;(doom-themes-neotree-config)
 
  ;; Install timu-rouge-theme package separately to ensure availability
 (use-package timu-rouge-theme
