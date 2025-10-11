@@ -96,7 +96,8 @@ main() {
 		tailscale \
 		claude-code \
 		ripgrep \
-		git
+		git \
+		qbittorrent
             
             echo "Installing AUR packages..."
             yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland plex-desktop plexamp-appimage yt-dlp
