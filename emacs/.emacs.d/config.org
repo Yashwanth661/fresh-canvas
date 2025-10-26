@@ -345,20 +345,52 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
   (setq dashboard-set-file-icons t)
   (setq dashboard-banner-logo-title "HAVE FUN!!!!")
   ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  (setq dashboard-startup-banner "~/.emacs.d/images/emacs-dash.png")  ;; use custom image as banner
-  (setq org-agenda-files '("~/.emacs.d/org/inbox.org"))
+  (setq dashboard-startup-banner "~/.emacs.d/images/emacs-dash.jpg")  ;; use custom image as banner
+  (setq org-agenda-files '("~/.emacs.d/org/todo.org"))
   (setq dashboard-center-content t) ;; set to 't' for centered content
   (setq dashboard-vertically-center-content t)
-  (setq dashboard-items '((recents . 5 )
-                          (agenda . 5 )
+  (setq dashboard-items '((recents . 3 )
+                          (agenda . 10 )
                           (bookmarks . 3)
                           (projects . 3)
                           (registers . 3)))
-  :custom
-  (dashboard-modify-heading-icons '((recents . "file-text")
-                                    (bookmarks . "book")))
+   ;; Agenda settings for dashboard
+  (setq dashboard-week-agenda t)
+  (setq dashboard-filter-agenda-entry 'dashboard-no-filter-agenda)
+  ;:custom
+  ;(dashboard-modify-heading-icons '((recents . "file-text")
+  ;                                  (bookmarks . "book")
+  ;                                  (agenda . "calendar")))
   :config
   (dashboard-setup-startup-hook))
+;; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+;; ORG-AGENDA CUSTOM VIEWS (for dashboard integration)
+;; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+(setq org-agenda-custom-commands
+      '(("d" "Daily Dashboard"
+         ((agenda "" ((org-agenda-span 'day)
+                      (org-agenda-overriding-header "\n📅 Today's Schedule\n")))
+          (tags-todo "SCHEDULED>=\"<today>\"+SCHEDULED<=\"<today>\""
+                     ((org-agenda-overriding-header "\n✅ Daily Tasks\n")
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'done))))
+          (tags "+PRIORITY=\"A\""
+                ((org-agenda-overriding-header "\n⚡ High Priority\n")
+                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'done))))))
+       
+        ("l" "Learning Progress"
+         ((tags-todo "+CATEGORY=\"Learning\""
+                     ((org-agenda-overriding-header "\n📚 Active Learning Tasks\n")))
+          (tags "+CATEGORY=\"Learning\"+CLOSED>=\"<-7d>\""
+                ((org-agenda-overriding-header "\n✨ Recently Completed (Last 7 Days)\n")
+                 (org-agenda-sorting-strategy '(time-down))))))
+        
+        ("w" "Watch List by Language"
+         ((tags "+telugu-DONE" ((org-agenda-overriding-header "\n🎭 Telugu - To Watch\n")))
+          (tags "+tamil-DONE" ((org-agenda-overriding-header "\n🎭 Tamil - To Watch\n")))
+          (tags "+hindi-DONE" ((org-agenda-overriding-header "\n🎭 Hindi - To Watch\n")))
+          (tags "+english-DONE" ((org-agenda-overriding-header "\n🎭 English - To Watch\n")))
+          (tags "+malayalam-DONE" ((org-agenda-overriding-header "\n🎭 Malayalam - To Watch\n")))))))
 #+end_src
 
 
