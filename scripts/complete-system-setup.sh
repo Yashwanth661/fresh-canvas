@@ -34,12 +34,13 @@ install_megacmd() {
     wget https://mega.nz/linux/repo/Arch_Extra/x86_64/megacmd-x86_64.pkg.tar.zst && sudo pacman -U "$PWD/megacmd-x86_64.pkg.tar.zst"
 }
 
-install_xdm() {
+install_xdmAndSoulseekQt() {
     # Download latest XDM
     wget https://github.com/subhra74/xdm/releases/download/7.2.11/xdm-setup-7.2.11.tar.xz
     tar -xvf xdm-setup-7.2.11.tar.xz
     cd xdm*
     sudo ./install.sh
+    paru -S soulseekqt
 }
 
 create_dirs() {
@@ -105,16 +106,20 @@ main() {
 		claude-code \
 		ripgrep \
 		git \
-		qbittorrent
+		qbittorrent \
+		stremio \
+		vlc \
+		imagemagick
             
             echo "Installing AUR packages..."
-            yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland plex-desktop plexamp-appimage yt-dlp
+            yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland plex-desktop plexamp-appimage yt-dlp vlc-plugins-all qimgv
             
             install_dotfiles
 	    setup_waydroid
             install_telegram_downloader
 	    install_megacmd
 	    create_dirs
+	    install_xdmAndSoulseekQt
             ;;
         "brew")
             brew tap homebrew/cask-fonts
