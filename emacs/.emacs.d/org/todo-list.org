@@ -1,40 +1,4 @@
-#+TITLE: My TODO List
-#+STARTUP: overview
-
-** Software Languages [0/2]
-:PROPERTIES:
-:CATEGORY: Learning
-:END:
-- [ ] C
-- [ ] Java
-** Movies
-:PROPERTIES:
-:CATEGORY: Movies
-:END:
-**** Telugu
-- [X] Michael madana kamaraju
-- [X] Kishkindhapuri
-- [X] Family Circus
-**** Malayalam
-- [ ] Fahadh Fassil Movies
-- [X] Ayyappanum Koshiyum
-**** Tamil
-- [X] Michael madana kamaraju
-- [X] Maharaja
-- [X] Kadaisi Vivasayi
-- [X] Jai Bhim
-- [X] Master
-- [X] Asuran
-- [X] Kabali
-- [X] Ghajini
-- [X] Mahaan
-- [X] Thug Life
-- [X] Marco
-**** Hindi
-- [ ]
-**** English
-- [ ]
-**** Anime
-- [ ]
-**** Animated
-- [ ]
+* My Todo List
+** Daily Tasks
+*** TODO Learn C
+*** TODO Learn Java

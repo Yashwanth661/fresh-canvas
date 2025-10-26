@@ -32,7 +32,7 @@
    '("https://www.reddit.com/r/emacs.rss"
      ("https://semiaccurate.com/feed")
      ("http://feeds.bbci.co.uk/news/rss.xml")))
- '(org-agenda-files '("/home/yashwanth/.emacs.d/org/todo-list.org"))
+ '(org-agenda-files nil)
  '(package-selected-packages
    '(all-the-icons-dired all-the-icons-ivy-rich beacon centered-window
 			 dashboard doom-modeline doom-themes elfeed

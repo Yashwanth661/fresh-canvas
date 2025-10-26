@@ -1,6 +1,6 @@
-#+TITLE: SAM's emacs config
-#+AUTHOR: SAM
-#+DESCRIPTION: SAM's personal Emacs config.
+#+TITLE: Yash's emacs config
+#+AUTHOR: Yashwanth
+#+DESCRIPTION: YASH's personal Emacs config.
 #+STARTUP: showeverything
 #+OPTIONS: toc:2
 #+PROPERTY: header-args:emacs-lisp :tangle config.el
@@ -17,6 +17,7 @@
 - [[#buffer-move][BUFFER MOVE]]
 - [[#disable-auto-save-files][DISABLE AUTO-SAVE FILES]]
 - [[#diminish][DIMINISH]]
+- [[#org-startup][ORG Startup]]
 - [[#dashboard][DASHBOARD]]
 - [[#djvu][DJVU]]
 - [[#dired][DIRED]]
@@ -49,7 +50,6 @@
   - [[#verilog-programs-enhanced][Verilog Programs (Enhanced)]]
   - [[#key-bindings][Key Bindings]]
   - [[#auto-mode-associations][Auto-Mode Associations]]
-  - [[#lsp-ui-for-better-visuals-optional][LSP UI for Better Visuals (Optional)]]
 - [[#mark-down-format][MARK-DOWN FORMAT]]
 - [[#maximize-buffer][MAXIMIZE BUFFER]]
 - [[#minibuffer-escape][MINIBUFFER ESCAPE]]
@@ -332,6 +332,14 @@ This package implements hiding or abbreviation of the modeline displays (lighter
 (use-package diminish)
 #+end_src
 
+* ORG Startup
+#+begin_src emacs-lisp
+;; Set agenda files EARLY - before dashboard loads
+(setq org-agenda-files '("~/dotfiles/emacs/.emacs.d/org/todo.org"))
+
+;; Add timestamp when marking DONE
+(setq org-log-done t)
+#+end_src
 
 * DASHBOARD
 Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
@@ -344,13 +352,11 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-banner-logo-title "HAVE FUN!!!!")
-  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
   (setq dashboard-startup-banner "~/.emacs.d/images/emacs-dash.jpg")  ;; use custom image as banner
-  (setq org-agenda-files '("~/.emacs.d/org/todo.org"))
   (setq dashboard-center-content t) ;; set to 't' for centered content
   (setq dashboard-vertically-center-content t)
-  (setq dashboard-items '((recents . 3 )
-                          (agenda . 10 )
+  (setq dashboard-items '((recents . 3)
+                          (agenda . 10)
                           (bookmarks . 3)
                           (projects . 3)
                           (registers . 3)))
@@ -1135,7 +1141,7 @@ Adding highlights to TODO and related words.
 ** C/C++
 #+begin_src emacs-lisp
 (use-package cc-mode
-  :elpaca nil
+  :ensure nil
   :config
   (add-hook 'c-mode-hook #'lsp-deferred)
   (add-hook 'c++-mode-hook #'lsp-deferred))
@@ -1250,14 +1256,6 @@ Adding highlights to TODO and related words.
 (add-to-list 'auto-mode-alist '("\.asm\'" . asm-mode))
 #+end_src
 
-** LSP UI for Better Visuals (Optional)
-#+begin_src emacs-lisp
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
-#+end_src
-
-
 * MARK-DOWN FORMAT
 #+BEGIN_SRC emacs-lisp
 ;; Markdown Mode Configuration
@@ -1279,7 +1277,7 @@ Idea is to maximize a buffer when needed.
 
 #+BEGIN_SRC emacs-lisp
 (use-package winner
-  :elpaca nil	;; do not install from external repo
+  :ensure nil	;; do not install from external repo
   :config
   (winner-mode 1))
 
@@ -1670,8 +1668,7 @@ Multi-vterm allows you to create and manage multiple vterm buffers, each with it
 
 #+begin_src emacs-lisp
 (use-package multi-vterm
-  :ensure t
-  :elpaca (multi-vterm
+  :ensure (multi-vterm
            :repo "suonlight/multi-vterm"
            :files ("*.el" "README.md"))
   :config

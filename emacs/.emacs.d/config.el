@@ -196,6 +196,12 @@ one, an error is signaled."
 
 (use-package diminish)
 
+;; Set agenda files EARLY - before dashboard loads
+(setq org-agenda-files '("~/dotfiles/emacs/.emacs.d/org/todo.org"))
+
+;; Add timestamp when marking DONE
+(setq org-log-done t)
+
 (use-package dashboard
   :ensure t 
   :init
@@ -203,13 +209,11 @@ one, an error is signaled."
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-banner-logo-title "HAVE FUN!!!!")
-  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
   (setq dashboard-startup-banner "~/.emacs.d/images/emacs-dash.jpg")  ;; use custom image as banner
-  (setq org-agenda-files '("~/.emacs.d/org/todo.org"))
   (setq dashboard-center-content t) ;; set to 't' for centered content
   (setq dashboard-vertically-center-content t)
-  (setq dashboard-items '((recents . 3 )
-                          (agenda . 10 )
+  (setq dashboard-items '((recents . 3)
+                          (agenda . 10)
                           (bookmarks . 3)
                           (projects . 3)
                           (registers . 3)))
@@ -888,7 +892,7 @@ one, an error is signaled."
         lsp-ui-peek-enable t))
 
 (use-package cc-mode
-  :elpaca nil
+  :ensure nil
   :config
   (add-hook 'c-mode-hook #'lsp-deferred)
   (add-hook 'c++-mode-hook #'lsp-deferred))
@@ -977,10 +981,6 @@ one, an error is signaled."
 (add-to-list 'auto-mode-alist '("\.sv\'" . verilog-mode))
 (add-to-list 'auto-mode-alist '("\.asm\'" . asm-mode))
 
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
-
 ;; Markdown Mode Configuration
 (use-package markdown-mode
   :ensure t
@@ -995,7 +995,7 @@ one, an error is signaled."
 (add-hook 'markdown-mode-hook 'markdown-preview-mode)
 
 (use-package winner
-  :elpaca nil	;; do not install from external repo
+  :ensure nil	;; do not install from external repo
   :config
   (winner-mode 1))
 
@@ -1254,8 +1254,7 @@ one, an error is signaled."
                   (window-height . 0.3))))
 
 (use-package multi-vterm
-  :ensure t
-  :elpaca (multi-vterm
+  :ensure (multi-vterm
            :repo "suonlight/multi-vterm"
            :files ("*.el" "README.md"))
   :config
