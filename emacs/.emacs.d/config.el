@@ -198,12 +198,6 @@ one, an error is signaled."
 
 (use-package diminish)
 
-;; Set agenda files EARLY - before dashboard loads
-(setq org-agenda-files '("~/dotfiles/emacs/.emacs.d/org/todo.org"))
-
-;; Add timestamp when marking DONE
-(setq org-log-done t)
-
 (use-package dashboard
   :ensure t 
   :init
@@ -1039,6 +1033,10 @@ one, an error is signaled."
                  (setq auto-hscroll-mode nil)))))
 
 ;; show hidden files
+
+(setq org-log-done t)
+(setq org-agenda-skip-function-global
+    '(org-agenda-skip-entry-if 'nottodo '("TODO" "DONE" "WAITING" "HOLD")))
 
 (use-package toc-org
     :commands toc-org-enable

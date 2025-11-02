@@ -109,8 +109,8 @@ main() {
 		qbittorrent \
 		stremio \
 		vlc \
-		imagemagick
-            
+		imagemagick \
+		kcalc
             echo "Installing AUR packages..."
             yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland plex-desktop plexamp-appimage yt-dlp vlc-plugins-all qimgv
             

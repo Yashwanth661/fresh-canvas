@@ -1,2 +1,6 @@
-* Test Org File
-** TODO Wow what a task
+#+CATEGORY:
+
+* My Todo List
+** Daily Tasks
+*** TODO Learn C
+*** TODO Learn Java
