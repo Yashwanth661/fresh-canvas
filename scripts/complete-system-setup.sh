@@ -61,6 +61,15 @@ setup_waydroid() {
     echo "Make the device trusted by fetch the android ID of waydroid and get it registered. In order to be able to install apps from PlayStore."
 }
 
+pipx_install() {
+	pipx install tidal-dl-ng
+}
+
+enable_openssh() {
+	sudo systemctl start sshd
+	sudo systemctl enable sshd
+}
+
 main() {
     local pm=$(detect_pm)
     
@@ -110,9 +119,11 @@ main() {
 		stremio \
 		vlc \
 		imagemagick \
-		kcalc
+		kcalc \
+		python-pipx \
+		openssh
             echo "Installing AUR packages..."
-            yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland plex-desktop plexamp-appimage yt-dlp vlc-plugins-all qimgv
+            yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland plex-desktop plexamp-appimage yt-dlp vlc-plugins-all qimgv streamrip
             
             install_dotfiles
 	    setup_waydroid
@@ -120,6 +131,7 @@ main() {
 	    install_megacmd
 	    create_dirs
 	    install_xdmAndSoulseekQt
+	    pipx_install
             ;;
         "brew")
             brew tap homebrew/cask-fonts
