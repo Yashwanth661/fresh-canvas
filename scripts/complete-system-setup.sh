@@ -70,6 +70,26 @@ enable_openssh() {
 	sudo systemctl enable sshd
 }
 
+iptables_part(){
+    sudo iptables -I OUTPUT -p udp --dport 53 -m string --hex-string "|03|www|09|jetbrains|03|com|" --algo bm -j DROP
+    sudo iptables -I OUTPUT -p udp --dport 53 -m string --hex-string "|07|account|09|jetbrains|03|com|" --algo bm -j DROP
+
+    sudo ip6tables -I OUTPUT -p udp --dport 53 -m string --hex-string "|03|www|09|jetbrains|03|com|" --algo bm -j DROP
+    sudo ip6tables -I OUTPUT -p udp --dport 53 -m string --hex-string "|07|account|09|jetbrains|03|com|" --algo bm -j DROP
+
+    sudo iptables-save | sudo tee /etc/iptables/iptables.rules > /dev/null
+    sudo ip6tables-save | sudo tee /etc/iptables/ip6tables.rules > /dev/null
+    
+    sudo systemctl enable iptables.service
+    sudo systemctl enable ip6tables.service
+    
+    sudo systemctl start iptables.service
+    sudo systemctl start ip6tables.service
+    
+    sudo systemctl status iptables.service
+    sudo systemctl status ip6tables.service
+}
+
 main() {
     local pm=$(detect_pm)
     
