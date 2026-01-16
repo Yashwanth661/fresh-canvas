@@ -1625,6 +1625,7 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
 (use-package vterm
 :config
 (setq shell-file-name "/usr/bin/bash"
+      vterm-shell "/usr/bin/fish"
       vterm-max-scrollback 5000))
 #+end_src
 
