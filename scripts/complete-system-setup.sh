@@ -143,7 +143,8 @@ main() {
 		python-pipx \
 		openssh \
 		rtorrent \
-		tmux
+		tmux \
+		gdb
             echo "Installing AUR packages..."
             yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland plex-desktop plexamp-appimage yt-dlp vlc-plugins-all qimgv streamrip
             
