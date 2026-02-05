@@ -146,7 +146,9 @@ main() {
 		tmux \
 		gdb \
 		# Python Tool to Open Excels in terminal
-	    	visidata
+	    	visidata \
+		# Dep for above tool
+		python-openpyxl
             echo "Installing AUR packages..."
             yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland plex-desktop plexamp-appimage yt-dlp vlc-plugins-all qimgv streamrip
             
