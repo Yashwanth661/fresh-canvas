@@ -148,7 +148,10 @@ main() {
 		# Python Tool to Open Excels in terminal
 	    	visidata \
 		# Dep for above tool
-		python-openpyxl
+		python-openpyxl \
+		# Cargo and Rust
+		cargo \
+		rust
             echo "Installing AUR packages..."
             yay -S --noconfirm proton-vpn-gtk-app pasystray-wayland plex-desktop plexamp-appimage yt-dlp vlc-plugins-all qimgv streamrip
             
