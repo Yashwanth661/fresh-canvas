@@ -70,6 +70,10 @@ enable_openssh() {
 	sudo systemctl enable sshd
 }
 
+cargo_installations() {
+	cargo install magnetfinder
+}
+
 iptables_part(){
     sudo iptables -I OUTPUT -p udp --dport 53 -m string --hex-string "|03|www|09|jetbrains|03|com|" --algo bm -j DROP
     sudo iptables -I OUTPUT -p udp --dport 53 -m string --hex-string "|07|account|09|jetbrains|03|com|" --algo bm -j DROP
@@ -162,6 +166,7 @@ main() {
 	    create_dirs
 	    install_xdmAndSoulseekQt
 	    pipx_install
+	    cargo_installations
             ;;
         "brew")
             brew tap homebrew/cask-fonts
