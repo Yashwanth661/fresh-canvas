@@ -61,8 +61,14 @@ setup_waydroid() {
     echo "Make the device trusted by fetch the android ID of waydroid and get it registered. In order to be able to install apps from PlayStore."
 }
 
-pipx_install() {
-	pipx install tidal-dl-ng
+python_installs() {
+	# Virtual Envs Path
+	mkdir -p ~/.virtualenvs
+	# Tiddl
+	python3 -m venv ~/.virutalenvs/tiddl
+	~/.virtualenvs/tiddl/bin/pip install tiddl
+	mkdir -p ~/.config/tiddl
+	echo 'export TIDDL_PATH="~/.config/tiddl"'
 }
 
 enable_openssh() {
