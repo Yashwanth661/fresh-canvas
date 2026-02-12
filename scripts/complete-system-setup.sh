@@ -171,7 +171,7 @@ main() {
 	    install_megacmd
 	    create_dirs
 	    install_xdmAndSoulseekQt
-	    pipx_install
+	    python_installs
 	    cargo_installations
             ;;
         "brew")
@@ -188,6 +188,7 @@ main() {
     fc-cache -fv
     echo "Setup completed successfully!"
     echo "Make sure that you register the waydroid device as a a trsuted device and then login to tdl (telegram downloader) and have a BLAST!!!!!!!!"
+    echo "Run : tidal auth login"
 }
 
 main "$@"
