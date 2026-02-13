@@ -1623,10 +1623,17 @@ Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets t
 
 #+begin_src emacs-lisp
 (use-package vterm
-:config
-(setq shell-file-name "/usr/bin/bash"
-      vterm-shell "/usr/bin/fish"
-      vterm-max-scrollback 5000))
+  :config
+  (cond
+   ;; Linux / Garuda: use fish
+   ((eq system-type 'gnu/linux)
+    (setq shell-file-name "/usr/bin/fish"
+          vterm-shell "/usr/bin/fish"))
+   ;; macOS: use zsh (default path)
+   ((eq system-type 'darwin)
+    (setq shell-file-name "/bin/zsh"
+          vterm-shell "/bin/zsh")))
+  (setq vterm-max-scrollback 5000))
 #+end_src
 
 ** Vterm-Toggle 
@@ -1674,7 +1681,7 @@ Multi-vterm allows you to create and manage multiple vterm buffers, each with it
   :config
   ;; Set dedicated window height (optional)
   (setq multi-vterm-dedicated-window-height-percent 30)
-  
+   
   ;; Evil mode integration (since you're using evil)
   (add-hook 'vterm-mode-hook 
             (lambda () 
