@@ -1224,9 +1224,17 @@ one, an error is signaled."
       eshell-visual-commands'("bash" "fish" "htop" "ssh" "top" "zsh"))
 
 (use-package vterm
-:config
-(setq shell-file-name "/usr/bin/bash"
-      vterm-max-scrollback 5000))
+  :config
+  (cond
+   ;; Linux / Garuda: use fish
+   ((eq system-type 'gnu/linux)
+    (setq shell-file-name "/usr/bin/fish"
+          vterm-shell "/usr/bin/fish"))
+   ;; macOS: use zsh (default path)
+   ((eq system-type 'darwin)
+    (setq shell-file-name "/bin/zsh"
+          vterm-shell "/bin/zsh")))
+  (setq vterm-max-scrollback 5000))
 
 (with-eval-after-load 'vterm-toggle
   (defcustom vterm-toggle-hide-hook nil
@@ -1260,7 +1268,7 @@ one, an error is signaled."
   :config
   ;; Set dedicated window height (optional)
   (setq multi-vterm-dedicated-window-height-percent 30)
-  
+   
   ;; Evil mode integration (since you're using evil)
   (add-hook 'vterm-mode-hook 
             (lambda () 
