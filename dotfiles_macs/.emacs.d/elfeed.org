@@ -1,3 +1,0 @@
-* Feeds :elfeed:
-** Emacs
-*** https://www.reddit.com/r/emacs.rss
