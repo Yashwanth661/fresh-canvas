@@ -213,13 +213,15 @@ one, an error is signaled."
                           (bookmarks . 3)
                           (projects . 3)
                           (registers . 3)))
+ (setq dashboard-agenda-prefix-format " %i %-11s ")
+ (setq org-agenda-tags-column 0) 
    ;; Agenda settings for dashboard
   (setq dashboard-week-agenda t)
   (setq dashboard-filter-agenda-entry 'dashboard-no-filter-agenda)
   ;:custom
   ;(dashboard-modify-heading-icons '((recents . "file-text")
   ;                                  (bookmarks . "book")
-  ;                                  (agenda . "calendar")))
+  ;                                  (agenda . "calendar"))) 
   :config
   (dashboard-setup-startup-hook))
 ;; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

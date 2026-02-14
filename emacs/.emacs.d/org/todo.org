@@ -1,6 +1,6 @@
 #+CATEGORY:
 
-* My Todo List
-** Daily Tasks
-*** Learn Docker
-*** Learn C
+* TODO Learn Docker
+SCHEDULED <2026-02-15 Sun +1d>
+* TODO Learn C
+SCHEDULED <2026-02-15 Sun +1d>
