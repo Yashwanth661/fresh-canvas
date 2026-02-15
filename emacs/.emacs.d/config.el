@@ -1387,7 +1387,7 @@ one, an error is signaled."
   (setq which-key-side-window-location 'bottom
 	which-key-sort-order #'which-key-key-order-alpha
 	which-key-sort-uppercase-first nil
-	which-key-add-column-padding 1
+	which-key-add-column-padding 0
 	which-key-max-display-columns nil
 	which-key-min-display-lines 6
 	which-key-side-window-slot -10
@@ -1395,4 +1395,14 @@ one, an error is signaled."
 	which-key-idle-delay 0.8
 	which-key-max-description-length 25
 	which-key-allow-imprecise-window-fit nil
-	which-key-separator " → " ))
+	which-key-separator " → ")
+  ;; increase which-key font size via faces
+  (custom-set-faces
+   '(which-key-key-face
+     ((t (:height 1.3))))
+   '(which-key-command-description-face
+     ((t (:height 1.3))))
+   '(which-key-group-description-face
+     ((t (:height 1.3))))
+   '(which-key-separator-face
+     ((t (:height 1.3))))))

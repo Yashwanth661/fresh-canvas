@@ -32,8 +32,7 @@
    '("https://www.reddit.com/r/emacs.rss"
      ("https://semiaccurate.com/feed")
      ("http://feeds.bbci.co.uk/news/rss.xml")))
- '(org-agenda-files
-  '("~/dotfiles/emacs/.emacs.d/org/todo.org"))
+ '(org-agenda-files '("~/dotfiles/emacs/.emacs.d/org/todo.org"))
  '(package-selected-packages
    '(all-the-icons-dired all-the-icons-ivy-rich beacon centered-window
 			 dashboard doom-modeline doom-themes elfeed
@@ -50,6 +49,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-tooltip ((t (:background "#172030" :foreground "#fafff6"))))
+ '(company-tooltip-search ((t (:background "#db6e8f" :foreground "#172030" :weight bold))))
  '(fringe ((t (:background "#282a36"))))
  '(org-level-1 ((t (:inherit outline-1 :height 1.7))))
  '(org-level-2 ((t (:inherit outline-2 :height 1.6))))
