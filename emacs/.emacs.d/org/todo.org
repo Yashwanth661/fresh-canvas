@@ -1,6 +1,10 @@
 #+CATEGORY:
 
-* TODO Learn Docker
-SCHEDULED <2026-02-15 Sun +1d>
 * TODO Learn C
-SCHEDULED <2026-02-15 Sun +1d>
+* TODO Learn Docker
+SCHEDULED: <2026-02-18 Wed +1d>
+:PROPERTIES:
+:LAST_REPEAT: [2026-02-17 Wed 02:00]
+:END:
+1. State "DONE"       from "TODO"       [2026-02-17 Wed 02:00]
+2. State "DONE"       from "TODO"       [2026-02-16 Tue 22:26]
