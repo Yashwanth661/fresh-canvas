@@ -2,7 +2,7 @@
 
 * TODO Learn C
 * TODO Learn Docker
-SCHEDULED: <2026-02-18 Wed +1d>
+SCHEDULED: <2026-02-19 Thu +1d>
 :PROPERTIES:
 :LAST_REPEAT: [2026-02-17 Wed 02:00]
 :END:
