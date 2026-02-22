@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+#Apply rules at yabai startup
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+sudo yabai --load-sa
+
+# Basic yabai configuration
+yabai -m config layout bsp
+yabai -m config window_placement second_child
+
+# padding set to 12px
+yabai -m config top_padding 23
+yabai -m config bottom_padding 0.5
+yabai -m config left_padding 0.5
+yabai -m config right_padding 0.5
+yabai -m config window_gap 0.5
+
+#Spaces
+yabai -m space 1 --label home
+yabai -m space 2 --label shuu
+
+#App Specific Windows
+yabai -m rule --add app="^Emacs$" space=home
+yabai -m rule --add app="^MuMuPlayer Pro$" space=shuu
+yabai -m rule --add app="^MuMu Android Device$" space=shuu
