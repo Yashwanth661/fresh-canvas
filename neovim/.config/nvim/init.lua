@@ -21,7 +21,24 @@ vim.opt.rtp:prepend(lazypath)
 -- Plugins
 -----------------------------------------------------------
 require("lazy").setup({
-  { "folke/tokyonight.nvim", lazy = false, priority = 1000 },
+ -- { "folke/tokyonight.nvim", lazy = false, priority = 1000 },
+  {
+  "navarasu/onedark.nvim",
+  lazy = false,
+  priority = 1000,
+  config = function()
+    require("onedark").setup({
+      style = "darker",  -- darker = closest to doom-dark+
+      bold = true,
+      italic = {
+        strings = true,
+        comments = true,
+        keywords = true,
+      },
+    })
+    require("onedark").load()
+  end,
+  },
   { "nvim-lualine/lualine.nvim", dependencies = { "nvim-tree/nvim-web-devicons" } },
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
   { "nvim-tree/nvim-tree.lua", dependencies = { "nvim-tree/nvim-web-devicons" }},
@@ -36,7 +53,7 @@ opt.number = true
 opt.relativenumber = true
 opt.termguicolors = true
 
-vim.cmd.colorscheme("tokyonight")
+vim.cmd.colorscheme("onedark")
 
 -----------------------------------------------------------
 -- Safe plugin setup (guarded)
@@ -45,7 +62,7 @@ vim.cmd.colorscheme("tokyonight")
 -- Lualine
 local ok_lualine, lualine = pcall(require, "lualine")
 if ok_lualine then
-  lualine.setup({ options = { theme = "tokyonight" } })
+  lualine.setup({ options = { theme = "onedark" } })
 end
 
 -- Treesitter

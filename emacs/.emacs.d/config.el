@@ -1309,21 +1309,21 @@ one, an error is signaled."
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
    ;; Automatically accept all themes as safe
-  (setq custom-safe-themes t))
-
+  (setq custom-safe-themes t)
+  (load-theme 'doom-dark+ t))
   ;; enable theme for neo-tree as well
   ;;(doom-themes-neotree-config)
 
  ;; Install timu-rouge-theme package separately to ensure availability
-(use-package timu-rouge-theme
-  :ensure t
-  :after doom-themes
-  :config
+;;(use-package timu-rouge-theme
+ ;; :ensure t
+;;  :after doom-themes
+;;  :config
   ;; Load timu-rouge theme with no confirmation required
-  (load-theme 'timu-rouge t))
+;;  (load-theme 'timu-rouge t))
 
 ;; Ensure the selected theme persists across sessions
-(customize-set-variable 'custom-enabled-themes '(timu-rouge))
+;;(customize-set-variable 'custom-enabled-themes '(timu-rouge))
 
 (add-to-list 'default-frame-alist '(alpha-background . 85)) ; For all new frames henceforth
 
