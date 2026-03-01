@@ -1,5 +1,8 @@
 -- ~/.config/nvim/init.lua
--- Minimal, safe starter with lazy.nvim and a couple of plugins.
+-- Yashwanth's config for nvim
+-----------------------------------------------------------
+-- Dependencies
+-----------------------------------------------------------
 
 -----------------------------------------------------------
 -- Bootstrap lazy.nvim
@@ -36,6 +39,30 @@ require("lazy").setup({
   { "nvim-lualine/lualine.nvim", dependencies = { "nvim-tree/nvim-web-devicons" } },
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
   { "nvim-tree/nvim-tree.lua", dependencies = { "nvim-tree/nvim-web-devicons" }},
+---Snacks for image rendering (Dashboard)
+{
+  "folke/snacks.nvim",
+  opts = {
+    image = {
+      enabled = true,
+      backend = "kitty",
+    },
+    dashboard = {
+      enabled = true,
+      -- your dashboard config here
+    sections = {
+	section = "terminal",
+	cmd = "/opt/homebrew/bin/chafa /home/ravindra/dotfiles/wallpapers/jojo.jpg --format symbols --symbols vhalf --size 60x18 --stretch --animate false; sleep .1",
+    height = 20,
+	width = 60,
+	opts = {
+	redraw = true,
+	noautocmd = true,
+	}
+}
+  },
+},
+},
 })
 
 -----------------------------------------------------------
@@ -75,5 +102,22 @@ if ok_tree then
   nvim_tree.setup({})
 end
 
+--------------------------------------------------
+-- Keybindings
+--------------------------------------------------
 -- Keymap: toggle file explorer with <leader>e (space+e if leader is space)
 vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>", { silent = true })
+-- Keymap: Go to Dashboard
+vim.keymap.set("n", "<leader>od", function() Snacks.dashboard() end, { desc = "Open Dashboard" })
+
+vim.g.clipboard = {
+  name = 'OSC 52',
+  copy = {
+    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+  },
+  paste = {
+    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+  },
+}
