@@ -42,26 +42,32 @@ require("lazy").setup({
 ---Snacks for image rendering (Dashboard)
 {
   "folke/snacks.nvim",
+  priority = 1000,
   opts = {
     image = {
       enabled = true,
-      backend = "kitty",
     },
     dashboard = {
       enabled = true,
       -- your dashboard config here
     sections = {
-	section = "terminal",
-	cmd = "/opt/homebrew/bin/chafa /home/ravindra/dotfiles/wallpapers/jojo.jpg --format symbols --symbols vhalf --size 60x18 --stretch --animate false; sleep .1",
-    height = 20,
-	width = 60,
-	opts = {
-	redraw = true,
-	noautocmd = true,
-	}
-}
+	    {section = "header"},
+{ section = "keys", gap = 1, padding = 1},
+{ section = "startup" },
+},
   },
 },
+},
+{
+  'nvim-orgmode/orgmode',
+  dependencies = { 'nvim-treesitter/nvim-treesitter' },
+  event = 'VeryLazy',
+  config = function()
+    require('orgmode').setup({
+      org_agenda_files = '~/org/*.org',
+      org_default_notes_file = '~/org/todo.org',
+    })
+  end,
 },
 })
 

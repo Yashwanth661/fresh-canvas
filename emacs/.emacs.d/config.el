@@ -1236,7 +1236,8 @@ one, an error is signaled."
    ((eq system-type 'darwin)
     (setq shell-file-name "/bin/zsh"
           vterm-shell "/bin/zsh")))
-  (setq vterm-max-scrollback 5000))
+  (setq vterm-max-scrollback 5000)
+  (setq vterm-term-environment-variable "xterm-256color"))
 
 (with-eval-after-load 'vterm-toggle
   (defcustom vterm-toggle-hide-hook nil
