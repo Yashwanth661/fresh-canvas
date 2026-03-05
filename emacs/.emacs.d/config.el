@@ -1,3 +1,7 @@
+;;Menu bar + title bar removed
+(add-to-list 'default-frame-alist '(undecorated-round . t))
+(menu-bar-mode -1)
+(tool-bar-mode -1)
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
@@ -44,6 +48,8 @@
   ;; Assume :elpaca t unless otherwise specified.
   (setq elpaca-use-package-by-default t))
 
+(use-package hide-mode-line
+  :hook (dashboard-mode . hide-mode-line-mode))
 ;; Block until current queue processed.
 (elpaca-wait)
 
@@ -205,53 +211,40 @@ one, an error is signaled."
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-banner-logo-title "HAVE FUN!!!!")
-  (setq dashboard-startup-banner "~/.emacs.d/images/emacs-dash.jpg")  ;; use custom image as banner
-  (setq dashboard-center-content t) ;; set to 't' for centered content
+  (setq dashboard-startup-banner "~/.emacs.d/images/emacs-dash.jpg")
+  (setq dashboard-center-content t)
   (setq dashboard-vertically-center-content t)
-  (setq dashboard-items '((recents . 3)
-                          (agenda . 10)
+  
+  ;; Navigator shortcut bar
+  (setq dashboard-set-navigator t)
+   (setq dashboard-items '((recents   . 3)
+                          (agenda    . 10)
                           (bookmarks . 3)
-                          (projects . 3)
+                          (projects  . 3)
                           (registers . 3)))
- (setq dashboard-agenda-prefix-format " %i %-11s ")
- (setq org-agenda-tags-column 0) 
-   ;; Agenda settings for dashboard
+  (setq dashboard-agenda-prefix-format " %i %-11s ")
+  (setq org-agenda-tags-column 0)
   (setq dashboard-week-agenda t)
   (setq dashboard-filter-agenda-entry 'dashboard-no-filter-agenda)
-  ;:custom
-  ;(dashboard-modify-heading-icons '((recents . "file-text")
-  ;                                  (bookmarks . "book")
-  ;                                  (agenda . "calendar"))) 
-  :config
-  (dashboard-setup-startup-hook))
-;; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-;; ORG-AGENDA CUSTOM VIEWS (for dashboard integration)
-;; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-(setq org-agenda-custom-commands
-      '(("d" "Daily Dashboard"
-         ((agenda "" ((org-agenda-span 'day)
-                      (org-agenda-overriding-header "\n📅 Today's Schedule\n")))
-          (tags-todo "SCHEDULED>=\"<today>\"+SCHEDULED<=\"<today>\""
-                     ((org-agenda-overriding-header "\n✅ Daily Tasks\n")
-                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'done))))
-          (tags "+PRIORITY=\"A\""
-                ((org-agenda-overriding-header "\n⚡ High Priority\n")
-                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'done))))))
-       
-        ("l" "Learning Progress"
-         ((tags-todo "+CATEGORY=\"Learning\""
-                     ((org-agenda-overriding-header "\n📚 Active Learning Tasks\n")))
-          (tags "+CATEGORY=\"Learning\"+CLOSED>=\"<-7d>\""
-                ((org-agenda-overriding-header "\n✨ Recently Completed (Last 7 Days)\n")
-                 (org-agenda-sorting-strategy '(time-down))))))
-        
-        ("w" "Watch List by Language"
-         ((tags "+telugu-DONE" ((org-agenda-overriding-header "\n🎭 Telugu - To Watch\n")))
-          (tags "+tamil-DONE" ((org-agenda-overriding-header "\n🎭 Tamil - To Watch\n")))
-          (tags "+hindi-DONE" ((org-agenda-overriding-header "\n🎭 Hindi - To Watch\n")))
-          (tags "+english-DONE" ((org-agenda-overriding-header "\n🎭 English - To Watch\n")))
-          (tags "+malayalam-DONE" ((org-agenda-overriding-header "\n🎭 Malayalam - To Watch\n")))))))
+  :custom-face
+  (dashboard-banner-logo-title ((t (:height 2.0 :weight bold))))
+  (dashboard-heading           ((t (:height 1.3 :weight bold :foreground "#51afef"))))
+  (dashboard-items-face        ((t (:height 1.2))))
+  (dashboard-navigator         ((t (:height 1.1 :weight bold :foreground "#98be65"))))
+
+  :config
+  (setq dashboard-navigator-buttons
+        (list (list
+               (list (all-the-icons-faicon "bookmark" :height 1.1 :v-adjust 0.0) "Bookmarks" "Open bookmarks"  (lambda (&rest _) (bookmark-bmenu-list)))
+               (list (all-the-icons-faicon "clock-o"  :height 1.1 :v-adjust 0.0) "Recents"   "Recent files"    (lambda (&rest _) (recentf-open-files)))
+               (list (all-the-icons-faicon "calendar" :height 1.1 :v-adjust 0.0) "Agenda"    "Open org agenda" (lambda (&rest _) (org-agenda nil "a")))
+               (list (all-the-icons-faicon "rocket"   :height 1.1 :v-adjust 0.0) "Projects"  "Switch project"  (lambda (&rest _) (project-switch-project ""))))))
+  ;; Dashboard mode - hide line
+  (add-hook 'dashboard-mode-hook
+          (lambda ()
+            (setq-local mode-line-format nil)
+            (set-window-parameter nil 'mode-line-format 'none))))
 
 ;; DocView configuration (built-in)
 (use-package doc-view
@@ -1237,7 +1230,12 @@ one, an error is signaled."
     (setq shell-file-name "/bin/zsh"
           vterm-shell "/bin/zsh")))
   (setq vterm-max-scrollback 5000)
-  (setq vterm-term-environment-variable "xterm-256color"))
+  (setq vterm-term-environment-variable "xterm-256color")
+  (add-hook 'vterm-mode-hook
+            (lambda ()
+              (set (make-local-variable 'buffer-face-mode-face)
+		   '(:family "JetBrainsMono Nerd Font Mono"))
+              (buffer-face-mode t))))
 
 (with-eval-after-load 'vterm-toggle
   (defcustom vterm-toggle-hide-hook nil
